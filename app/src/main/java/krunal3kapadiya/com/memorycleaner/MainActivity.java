@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +19,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,10 +43,10 @@ public class MainActivity extends AppCompatActivity
     File[] mFiles;
     File currentDir;
 
-//    private AdView mAdView;
+    private AdView mAdView = (AdView) findViewById(R.id.adView);
 //    // [START_EXCLUDE]
-//    private InterstitialAd mInterstitialAd;
-//    private Button mLoadInterstitialButton;
+    private InterstitialAd mInterstitialAd;
+    private Button mLoadInterstitialButton;
 //    // [END_EXCLUDE]
 
     @Override
@@ -87,13 +93,12 @@ public class MainActivity extends AppCompatActivity
         availableMemory.setText("Free Memory" + formatSize(avilableMemory));
         freeMemory.setText("Around " + formatSize((hikeMemory + whatsAppMemory)) + " can be free up.");
 
-//        mAdView = (AdView) findViewById(R.id.adView);
-//        AdRequest adRequest = new AdRequest.Builder().build();
-//        mAdView.loadAd(adRequest);
-//
-//        mInterstitialAd = new InterstitialAd(this);
-//        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
-//        // [END instantiate_interstitial_ad]
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        // [END instantiate_interstitial_ad]
 
         // TODO add rate me dialog
     }
@@ -310,5 +315,41 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    /**
+     * Called when returning to the activity
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    /**
+     * Called before the activity is destroyed
+     */
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
+    }
+    // [END add_lifecycle_methods]
+
+    @VisibleForTesting
+    AdView getAdView() {
+        return mAdView;
     }
 }
