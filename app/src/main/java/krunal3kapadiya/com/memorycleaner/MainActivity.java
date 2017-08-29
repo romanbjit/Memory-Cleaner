@@ -1,9 +1,12 @@
 package krunal3kapadiya.com.memorycleaner;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -13,7 +16,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -25,8 +27,21 @@ import krunal3kapadiya.com.memorycleaner.adapter.AppListRVAdapter;
 import krunal3kapadiya.com.memorycleaner.data.AppData;
 import krunal3kapadiya.com.memorycleaner.widget.PieChart;
 
-public class MainActivity extends AppCompatActivity {
+import static krunal3kapadiya.com.memorycleaner.Constants.getMimeType;
+
+public class MainActivity extends AppCompatActivity
+        implements AppListRVAdapter.OnItemClickListener {
     private final int PERMISSION_REQUEST_CODE = 1;
+    ArrayList<AppData> mAppData;
+    AppListRVAdapter adapter;
+    File[] mFiles;
+    File currentDir;
+
+//    private AdView mAdView;
+//    // [START_EXCLUDE]
+//    private InterstitialAd mInterstitialAd;
+//    private Button mLoadInterstitialButton;
+//    // [END_EXCLUDE]
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         askForPermission();
         getHikeFolderSize();
 
+        getTotalInternalMemorySize();
+        getAvailableInternalMemorySize();
+
         pie.addItem("Hike Memory", hikeMemory, res.getColor(android.R.color.holo_orange_light));
         pie.addItem("WhatsApp Memory", whatsAppMemory, res.getColor(android.R.color.black));
         pie.addItem("Available Memory", avilableMemory, res.getColor(R.color.bluegrass));
@@ -47,16 +65,18 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ArrayList<AppData> mAppData = new ArrayList<>();
+        mAppData = new ArrayList<>();
+
 
         File whatsAppPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/WhatsApp/");
         File hikeAppPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Hike/");
 
+        mAppData.add(new AppData(whatsAppPath, whatsAppMemory, whatsAppPath.listFiles()));
+        mAppData.add(new AppData(hikeAppPath, hikeMemory, hikeAppPath.listFiles()));
 
-        mAppData.add(new AppData("WhatsApp", whatsAppMemory, whatsAppPath.listFiles()));
-        mAppData.add(new AppData("Hike", hikeMemory, hikeAppPath.listFiles()));
+        File[] files = {whatsAppPath, hikeAppPath};
 
-        AppListRVAdapter adapter = new AppListRVAdapter(this, mAppData);
+        adapter = new AppListRVAdapter(this, mFiles = files, this);
 
         recyclerView.setAdapter(adapter);
 
@@ -65,7 +85,17 @@ public class MainActivity extends AppCompatActivity {
         TextView freeMemory = (TextView) findViewById(R.id.free_memory);
         totalMemory.setText("Total Memory" + formatSize(totlaMemory));
         availableMemory.setText("Free Memory" + formatSize(avilableMemory));
-        freeMemory.setText("Around " + formatSize(hikeMemory + whatsAppMemory) + " can be free up.");
+        freeMemory.setText("Around " + formatSize((hikeMemory + whatsAppMemory)) + " can be free up.");
+
+//        mAdView = (AdView) findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
+//
+//        mInterstitialAd = new InterstitialAd(this);
+//        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+//        // [END instantiate_interstitial_ad]
+
+        // TODO add rate me dialog
     }
 
     private String getHikeFolderSize() {
@@ -201,6 +231,84 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        currentDir = mFiles[position];
+
+
+        if (currentDir.isDirectory()) {
+            // TODO check length
+            if (currentDir.canRead()) {
+                adapter.setData(mFiles = currentDir.listFiles());
+                adapter.notifyDataSetChanged();
+            }
+        } else {
+
+            if (Intent.ACTION_GET_CONTENT.equals(getIntent().getAction())) {
+
+                Intent intent = new Intent();
+
+                intent.setDataAndType(Uri.fromFile(currentDir), getMimeType(currentDir));
+
+                setResult(Activity.RESULT_OK, intent);
+
+                finish();
+            } else if (Constants.FileType.getFileType(currentDir) == Constants.FileType.ZIP) {
+
+                final ProgressDialog dialog = ProgressDialog.show(this, "", "Unzipping", true);
+
+                Thread thread = new Thread(() -> {
+                    try {
+//                        setPath(unzip(currentDir));
+                        runOnUiThread(dialog::dismiss);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
+                thread.run();
+            } else {
+
+                try {
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+
+                    intent.setDataAndType(Uri.fromFile(currentDir), getMimeType(currentDir));
+
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+
+        if (currentDir != null) {
+            currentDir = currentDir.getParentFile();
+            if (currentDir.getName().equals("0")) {
+                File whatsAppPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/WhatsApp/");
+                File hikeAppPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Hike/");
+                mFiles = new File[]{whatsAppPath, hikeAppPath};
+            } else {
+                mFiles = currentDir.listFiles();
+            }
+            if (mFiles != null) {
+                adapter.setData(mFiles);
+                adapter.notifyDataSetChanged();
+            } else {
+                super.onBackPressed();
+            }
+        } else {
+            super.onBackPressed();
         }
     }
 }

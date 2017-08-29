@@ -1,0 +1,62 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Appearance">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_icon"
+            android:title="Use circular icons"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="General">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_extension"
+            android:summary="For known file types"
+            android:title="Hide extensions"/>
+    </PreferenceCategory>
+    <!--android:summary="@string/summary_reminder"-->
+
+    <PreferenceCategory
+        android:title="About">
+
+        <Preference
+            android:summary="1.0.1"
+            android:title="Version">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://play.google.com/store/apps/details?id=com.calintat.explorer"/>
+
+        </Preference>
+
+        <Preference
+            android:summary="Developer"
+            android:title="Developer">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://play.google.com/store/apps/dev?id=5526451977947367946"/>
+
+        </Preference>
+
+    </PreferenceCategory>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="key_auto_cleaner"
+        android:title="Auto memory cleaner"/>
+
+    <!--android:summary="@string/summary_alarm"-->
+    <!--android:entries="@array/alarm_entries"-->
+    <!--android:entryValues="@array/alarm_values"-->
+    <!--android:defaultValue="12:00"-->
+    <!--android:dependency="@string/pref_key_reminder"-->
+    <!--<ListPreference-->
+    <!--android:key="key_select_folder"-->
+    <!--android:title="Select Folder to delete"/>-->
+
+    <!--<ListPreference-->
+    <!--android:key="key_about"-->
+    <!--android:title="About"/>-->
+</PreferenceScreen>

@@ -1,17 +1,26 @@
 package krunal3kapadiya.com.memorycleaner.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
+import krunal3kapadiya.com.memorycleaner.Constants;
+import krunal3kapadiya.com.memorycleaner.MainActivity;
 import krunal3kapadiya.com.memorycleaner.R;
-import krunal3kapadiya.com.memorycleaner.data.AppData;
 
 /**
  * Created by Krunal on 8/22/2017.
@@ -19,11 +28,16 @@ import krunal3kapadiya.com.memorycleaner.data.AppData;
 
 public class AppListRVAdapter extends RecyclerView.Adapter<AppListRVAdapter.ViewHolder> {
     private Context mContext;
-    private ArrayList<AppData> mAppDataArrayList;
+    //    private File[] mAppDataArrayList;
+    private OnItemClickListener mListener;
+    private ArrayList<File> mFileArrayList;
 
-    public AppListRVAdapter(Context context, ArrayList<AppData> appData) {
+    public AppListRVAdapter(Context context, File[] appData, OnItemClickListener listener) {
         mContext = context;
-        mAppDataArrayList = appData;
+//        mAppDataArrayList = appData;
+        mFileArrayList = new ArrayList<>();
+        Collections.addAll(mFileArrayList, appData);
+        mListener = listener;
     }
 
     @Override
@@ -34,30 +48,84 @@ public class AppListRVAdapter extends RecyclerView.Adapter<AppListRVAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mSize.setText(formatSize(mAppDataArrayList.get(position).getAppSize()));
-        holder.mTitle.setText(mAppDataArrayList.get(position).getAppName());
+        holder.mSize.setText(formatSize(MainActivity.getFolderSize((mFileArrayList.get(position))) / 1024));
+        holder.mTitle.setText(mFileArrayList.get(position).getName());
 
-        SubDirectoryRVAdapter subDirectoryRVAdapter = new SubDirectoryRVAdapter(mContext, mAppDataArrayList.get(position).getSubDirectory());
-        holder.mSubList.setLayoutManager(new LinearLayoutManager(mContext));
-        holder.mSubList.setAdapter(subDirectoryRVAdapter);
+        int color = ContextCompat.getColor(mContext, Constants.getColorResource(mFileArrayList.get(position)));
+
+        Drawable drawable = ContextCompat.getDrawable(mContext, Constants.getImageResource(mFileArrayList.get(position)));
+//        DrawableCompat.setTint(drawable, Color.rgb(255, 255, 255));
+
+        DrawableCompat.setTint(drawable, color);
+
+        Drawable drawableDelete = ContextCompat.getDrawable(mContext, R.mipmap.ic_delete);
+        DrawableCompat.setTint(drawableDelete, ContextCompat.getColor(mContext, R.color.directory));
+        holder.mDelete.setImageDrawable(drawableDelete);
+
+        holder.mImageView.setImageDrawable(drawable);
+
 
     }
 
     @Override
     public int getItemCount() {
-        return mAppDataArrayList.size();
+        if (mFileArrayList != null)
+            return mFileArrayList.size();
+        else
+            return 0;
+    }
+
+    public void setData(@NonNull File[] subDirectory) {
+        mFileArrayList.clear();
+        Collections.addAll(mFileArrayList, subDirectory);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+        RelativeLayout mLayout;
         TextView mTitle;
         TextView mSize;
-        RecyclerView mSubList;
+        ImageView mImageView;
+        ImageView mDelete;
 
         ViewHolder(View itemView) {
             super(itemView);
+            mLayout = itemView.findViewById(R.id.row_layout);
             mTitle = itemView.findViewById(R.id.row_app_title);
             mSize = itemView.findViewById(R.id.row_app_size);
-            mSubList = itemView.findViewById(R.id.row_app_rv);
+            mImageView = itemView.findViewById(R.id.row_app_image);
+            mDelete = itemView.findViewById(R.id.row_button_delete);
+
+            mLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListener.onItemClick(getAdapterPosition());
+                }
+            });
+            mDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog dialog = new AlertDialog.Builder(mContext)
+                            .setPositiveButton("YES", (dialogInterface, i) -> {
+                                File dir = mFileArrayList.get(getAdapterPosition());
+                                if (dir.isDirectory()) {
+                                    String[] children = dir.list();
+                                    for (String aChildren : children) {
+                                        boolean delete = new File(dir, aChildren).delete();
+                                    }
+                                } else {
+                                    boolean delete = mFileArrayList.get(getAdapterPosition()).delete();
+                                }
+
+                                notifyItemChanged(getAdapterPosition());
+                            })
+                            .setNegativeButton("NO", (dialogInterface, i) -> {
+
+                            })
+                            .setMessage("Are you sure want to delete this file?")
+                            .create();
+                    dialog.show();
+                }
+            });
         }
     }
 
@@ -68,5 +136,9 @@ public class AppListRVAdapter extends RecyclerView.Adapter<AppListRVAdapter.View
         else
             value = size + " Kb";
         return value;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
     }
 }

@@ -38,9 +38,9 @@ public class SubDirectoryRVAdapter extends RecyclerView.Adapter<SubDirectoryRVAd
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mSubTitle.setText("> " + mSubDirectory[position].getName());
-        ThirdLevelRVAdapter thirdLevelRVAdapter = new ThirdLevelRVAdapter(mContext, mSubDirectory[position].listFiles());
-        holder.mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        holder.mRecyclerView.setAdapter(thirdLevelRVAdapter);
+//        ThirdLevelRVAdapter thirdLevelRVAdapter = new ThirdLevelRVAdapter(mContext, mSubDirectory[position].listFiles());
+//        holder.mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+//        holder.mRecyclerView.setAdapter(thirdLevelRVAdapter);
 
         holder.mAppSize.setText(AppListRVAdapter.formatSize(getFolderSize((mSubDirectory[position])) / 1024));
     }
@@ -53,12 +53,12 @@ public class SubDirectoryRVAdapter extends RecyclerView.Adapter<SubDirectoryRVAd
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView mSubTitle;
         TextView mAppSize;
-        RecyclerView mRecyclerView;
+//        RecyclerView mRecyclerView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mSubTitle = itemView.findViewById(R.id.row_app_title);
-            mRecyclerView = itemView.findViewById(R.id.row_app_rv);
+//            mRecyclerView = itemView.findViewById(R.id.row_app_rv);
             mAppSize = itemView.findViewById(R.id.row_app_size);
         }
     }

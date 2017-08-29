@@ -8,21 +8,21 @@ import java.util.ArrayList;
  */
 
 public class AppData {
-    private String mAppName;
+    private File mAppName;
     private long mAppSize;
     private File[] mSubDirectoryPath;
 
-    public AppData(String appName, long appSize, File[] files) {
+    public AppData(File appName, long appSize, File[] files) {
         mAppName = appName;
         mAppSize = appSize;
         mSubDirectoryPath = files;
     }
 
-    public String getAppName() {
+    public File getAppName() {
         return mAppName;
     }
 
-    public void setAppName(String appName) {
+    public void setAppName(File appName) {
         mAppName = appName;
     }
 

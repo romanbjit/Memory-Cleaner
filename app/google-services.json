@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "523006662598",
+    "firebase_url": "https://memorycleaner-85a23.firebaseio.com",
+    "project_id": "memorycleaner-85a23",
+    "storage_bucket": "memorycleaner-85a23.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:523006662598:android:f287f195ef0225f7",
+        "android_client_info": {
+          "package_name": "krunal3kapadiya.com.memorycleaner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "523006662598-8k95gjslho62vjp83q7ukbjejao0nmjj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "krunal3kapadiya.com.memorycleaner",
+            "certificate_hash": "894939570cbbef2d08a012fc5f683ca07e3efd41"
+          }
+        },
+        {
+          "client_id": "523006662598-lo8d3hagan19huvhn3emj0l3sqevm60l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyD3_XgXiwyuas2pESXrap2txX9apSprU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "523006662598-lo8d3hagan19huvhn3emj0l3sqevm60l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

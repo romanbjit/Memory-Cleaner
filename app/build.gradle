@@ -9,6 +9,10 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
+
+        jackOptions {
+            enabled true
+        }
     }
     buildTypes {
         release {
@@ -16,10 +20,46 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+    }
+
 }
 
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
-    compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
+    compile 'com.android.support:appcompat-v7:26.0.1'
+    compile 'com.android.support:recyclerview-v7:26.0.1'
+    compile 'com.android.support:preference-v7:26.0.1'
+
+//    compile 'com.google.firebase:firebase-core:11.2.0'
+//    compile 'com.google.firebase:firebase-ads:11.2.0'
+    /**
+     * retrofit and other libraries
+     */
+//    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+//    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+//    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+//    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+//    compile 'com.jakewharton:butterknife:8.6.0'
+//    compile 'com.github.bumptech.glide:glide:3.8.0'
+//    compile 'com.google.code.gson:gson:2.8.0'
+//    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+//    compile "io.reactivex.rxjava2:rxjava:2.1.0"
+//    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+
+    //leak canary
+//    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+//    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+//    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+
+    //stetho
+//    compile 'com.facebook.stetho:stetho:1.5.0'
 }
+//apply plugin: 'com.google.gms.google-services'
