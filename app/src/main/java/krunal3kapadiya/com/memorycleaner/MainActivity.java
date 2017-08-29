@@ -1,6 +1,7 @@
 package krunal3kapadiya.com.memorycleaner;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -35,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
         Resources res = getResources();
         final PieChart pie = (PieChart) this.findViewById(R.id.Pie);
 
+
+        askForPermission();
+        getHikeFolderSize();
+
         pie.addItem("Hike Memory", hikeMemory, res.getColor(android.R.color.holo_orange_light));
         pie.addItem("WhatsApp Memory", whatsAppMemory, res.getColor(android.R.color.black));
         pie.addItem("Available Memory", avilableMemory, res.getColor(R.color.bluegrass));
@@ -44,8 +49,13 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ArrayList<AppData> mAppData = new ArrayList<>();
 
-        mAppData.add(new AppData("WhatsApp", whatsAppMemory));
-        mAppData.add(new AppData("Hike", hikeMemory));
+        File whatsAppPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/WhatsApp/");
+        File hikeAppPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Hike/");
+
+
+        mAppData.add(new AppData("WhatsApp", whatsAppMemory, whatsAppPath.listFiles()));
+        mAppData.add(new AppData("Hike", hikeMemory, hikeAppPath.listFiles()));
+
         AppListRVAdapter adapter = new AppListRVAdapter(this, mAppData);
 
         recyclerView.setAdapter(adapter);
@@ -186,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -1,16 +1,21 @@
 package krunal3kapadiya.com.memorycleaner.data;
 
+import java.io.File;
+import java.util.ArrayList;
+
 /**
- * Created by sanjay on 8/22/2017.
+ * Created by Krunal on 8/22/2017.
  */
 
 public class AppData {
     private String mAppName;
     private long mAppSize;
+    private File[] mSubDirectoryPath;
 
-    public AppData(String appName, long appSize) {
+    public AppData(String appName, long appSize, File[] files) {
         mAppName = appName;
         mAppSize = appSize;
+        mSubDirectoryPath = files;
     }
 
     public String getAppName() {
@@ -27,5 +32,13 @@ public class AppData {
 
     public void setAppSize(long appSize) {
         mAppSize = appSize;
+    }
+
+    public File[] getSubDirectory() {
+        return mSubDirectoryPath;
+    }
+
+    public void setSubDirectory(File[] subDirectory) {
+        mSubDirectoryPath = subDirectory;
     }
 }
