@@ -43,6 +43,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerInParent="true"
+        android:layout_marginEnd="@dimen/list_item_icon_margin"
+        android:layout_marginStart="@dimen/list_item_icon_margin"
         android:scaleType="center"
         tools:ignore="ContentDescription"/>
 

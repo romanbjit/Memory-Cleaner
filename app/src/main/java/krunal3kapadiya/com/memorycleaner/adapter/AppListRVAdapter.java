@@ -58,7 +58,7 @@ public class AppListRVAdapter extends RecyclerView.Adapter<AppListRVAdapter.View
 
         DrawableCompat.setTint(drawable, color);
 
-        Drawable drawableDelete = ContextCompat.getDrawable(mContext, R.mipmap.ic_delete);
+        Drawable drawableDelete = ContextCompat.getDrawable(mContext, R.drawable.ic_delete);
         DrawableCompat.setTint(drawableDelete, ContextCompat.getColor(mContext, R.color.directory));
         holder.mDelete.setImageDrawable(drawableDelete);
 
