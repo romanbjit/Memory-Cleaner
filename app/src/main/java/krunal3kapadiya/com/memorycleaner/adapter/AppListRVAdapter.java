@@ -107,16 +107,18 @@ public class AppListRVAdapter extends RecyclerView.Adapter<AppListRVAdapter.View
                     AlertDialog dialog = new AlertDialog.Builder(mContext)
                             .setPositiveButton("YES", (dialogInterface, i) -> {
                                 File dir = mFileArrayList.get(getAdapterPosition());
+                                mFileArrayList.remove(getAdapterPosition());
                                 if (dir.isDirectory()) {
                                     String[] children = dir.list();
                                     for (String aChildren : children) {
                                         boolean delete = new File(dir, aChildren).delete();
                                     }
-                                } else {
-                                    boolean delete = mFileArrayList.get(getAdapterPosition()).delete();
                                 }
-
-                                notifyItemChanged(getAdapterPosition());
+//                                else {
+//                                    boolean delete = mFileArrayList.get(getAdapterPosition()).delete();
+//                                }
+                                notifyDataSetChanged();
+//                                notifyItemChanged(getAdapterPosition());
                             })
                             .setNegativeButton("NO", (dialogInterface, i) -> {
 

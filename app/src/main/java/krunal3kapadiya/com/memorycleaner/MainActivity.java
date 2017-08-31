@@ -17,10 +17,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -360,14 +358,18 @@ public class MainActivity extends AppCompatActivity
                 mFiles = currentDir.listFiles();
             }
             if (mFiles != null) {
-                adapter.setData(mFiles);
-                adapter.notifyDataSetChanged();
+                refreshData();
             } else {
                 super.onBackPressed();
             }
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void refreshData() {
+        adapter.setData(mFiles);
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -382,7 +384,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     // [START add_lifecycle_methods]
-    /** Called when leaving the activity */
+
+    /**
+     * Called when leaving the activity
+     */
     @Override
     public void onPause() {
         if (mAdView != null) {
@@ -391,7 +396,9 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
     }
 
-    /** Called when returning to the activity */
+    /**
+     * Called when returning to the activity
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -403,7 +410,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /** Called before the activity is destroyed */
+    /**
+     * Called before the activity is destroyed
+     */
     @Override
     public void onDestroy() {
         if (mAdView != null) {
