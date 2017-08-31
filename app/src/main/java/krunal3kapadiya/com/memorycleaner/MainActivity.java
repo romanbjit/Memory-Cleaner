@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -342,6 +343,41 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setPositiveButton("YES", (dialogInterface, i) -> {
+
+
+                    if (mFiles[position].isDirectory()) {
+                        String[] children = mFiles[position].list();
+                        for (String aChildren : children) {
+                            boolean delete = new File(mFiles[position], aChildren).delete();
+                        }
+                    } else {
+                        boolean delete = mFiles[position].delete();
+                    }
+//                    mFiles[position].remove(position);
+                    currentDir = mFiles[position];
+
+
+                    if (currentDir.isDirectory()) {
+                        // TODO check length
+                        if (currentDir.canRead()) {
+                            adapter.setData(mFiles = currentDir.listFiles());
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+//                                notifyItemChanged(getAdapterPosition());
+                })
+                .setNegativeButton("NO", (dialogInterface, i) -> {
+
+                })
+                .setMessage("Are you sure want to delete this file?")
+                .create();
+        dialog.show();
     }
 
     @Override

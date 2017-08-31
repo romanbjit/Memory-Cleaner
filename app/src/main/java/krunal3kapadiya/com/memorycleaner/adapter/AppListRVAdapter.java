@@ -104,28 +104,7 @@ public class AppListRVAdapter extends RecyclerView.Adapter<AppListRVAdapter.View
             mDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AlertDialog dialog = new AlertDialog.Builder(mContext)
-                            .setPositiveButton("YES", (dialogInterface, i) -> {
-                                File dir = mFileArrayList.get(getAdapterPosition());
-                                mFileArrayList.remove(getAdapterPosition());
-                                if (dir.isDirectory()) {
-                                    String[] children = dir.list();
-                                    for (String aChildren : children) {
-                                        boolean delete = new File(dir, aChildren).delete();
-                                    }
-                                }
-//                                else {
-//                                    boolean delete = mFileArrayList.get(getAdapterPosition()).delete();
-//                                }
-                                notifyDataSetChanged();
-//                                notifyItemChanged(getAdapterPosition());
-                            })
-                            .setNegativeButton("NO", (dialogInterface, i) -> {
-
-                            })
-                            .setMessage("Are you sure want to delete this file?")
-                            .create();
-                    dialog.show();
+                    mListener.onDeleteClick(getAdapterPosition());
                 }
             });
         }
@@ -142,5 +121,7 @@ public class AppListRVAdapter extends RecyclerView.Adapter<AppListRVAdapter.View
 
     public interface OnItemClickListener {
         void onItemClick(int position);
+
+        void onDeleteClick(int position);
     }
 }
