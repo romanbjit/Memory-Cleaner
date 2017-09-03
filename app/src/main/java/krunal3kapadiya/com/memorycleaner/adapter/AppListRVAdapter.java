@@ -1,11 +1,11 @@
 package krunal3kapadiya.com.memorycleaner.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +21,8 @@ import java.util.Collections;
 import krunal3kapadiya.com.memorycleaner.Constants;
 import krunal3kapadiya.com.memorycleaner.MainActivity;
 import krunal3kapadiya.com.memorycleaner.R;
+
+import static krunal3kapadiya.com.memorycleaner.PreferenceUtils.getBoolean;
 
 /**
  * Created by Krunal on 8/22/2017.
@@ -49,22 +51,35 @@ public class AppListRVAdapter extends RecyclerView.Adapter<AppListRVAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mSize.setText(formatSize(MainActivity.getFolderSize((mFileArrayList.get(position))) / 1024));
-        holder.mTitle.setText(mFileArrayList.get(position).getName());
 
-        int color = ContextCompat.getColor(mContext, Constants.getColorResource(mFileArrayList.get(position)));
+        boolean extension = getBoolean(mContext, "pref_extension", true);
 
-        Drawable drawable = ContextCompat.getDrawable(mContext, Constants.getImageResource(mFileArrayList.get(position)));
-//        DrawableCompat.setTint(drawable, Color.rgb(255, 255, 255));
+        holder.mTitle.setText(extension ? Constants.getName(mFileArrayList.get(position)) : mFileArrayList.get(position).getName());
 
-        DrawableCompat.setTint(drawable, color);
+        if (getBoolean(mContext, "pref_icon", false)) {
+//            int color = ContextCompat.getColor(mContext, Constants.getColorResource(mFileArrayList.get(position)));
+            Drawable drawable = ContextCompat.getDrawable(mContext, Constants.getImageResource(mFileArrayList.get(position)));
+//            DrawableCompat.setTint(drawable, color);
+//            holder.mImageView.setImageDrawable(drawable);
 
+            int color = ContextCompat.getColor(mContext, R.color.misc_file);
+            holder.mImageView.setBackground(Constants.getBackground(mContext, color));
+//            Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_selected);
+
+            DrawableCompat.setTint(drawable, Color.rgb(255, 255, 255));
+
+            holder.mImageView.setImageDrawable(drawable);
+
+        } else {
+            int color = ContextCompat.getColor(mContext, Constants.getColorResource(mFileArrayList.get(position)));
+            Drawable drawable = ContextCompat.getDrawable(mContext, Constants.getImageResource(mFileArrayList.get(position)));
+            DrawableCompat.setTint(drawable, color);
+            holder.mImageView.setBackground(null);
+            holder.mImageView.setImageDrawable(drawable);
+        }
         Drawable drawableDelete = ContextCompat.getDrawable(mContext, R.drawable.ic_delete);
         DrawableCompat.setTint(drawableDelete, ContextCompat.getColor(mContext, R.color.directory));
         holder.mDelete.setImageDrawable(drawableDelete);
-
-        holder.mImageView.setImageDrawable(drawable);
-
-
     }
 
     @Override

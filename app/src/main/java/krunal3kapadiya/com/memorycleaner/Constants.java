@@ -1,5 +1,8 @@
 package krunal3kapadiya.com.memorycleaner;
 
+import android.content.Context;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
@@ -130,6 +133,44 @@ public class Constants {
                 return 0;
         }
     }
+
+    public static String getName(File file) {
+
+        //returns the name of the file hiding extensions of known file types
+
+        switch (FileType.getFileType(file)) {
+
+            case DIRECTORY:
+                return file.getName();
+
+            case MISC_FILE:
+                return file.getName();
+
+            default:
+                return removeExtension(file.getName());
+        }
+    }
+    public static String removeExtension(String filename) {
+
+        int index = filename.lastIndexOf(".");
+
+        return index != -1 ? filename.substring(0, index) : filename;
+    }
+    public static ShapeDrawable getBackground(Context context, int color) {
+
+        ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());
+
+        int size = (int) context.getResources().getDimension(R.dimen.avatar_size);
+
+        shapeDrawable.setIntrinsicWidth(size);
+
+        shapeDrawable.setIntrinsicHeight(size);
+
+        shapeDrawable.getPaint().setColor(color);
+
+        return shapeDrawable;
+    }
+
     public static int getColorResource(File file) {
 
         switch (FileType.getFileType(file)) {

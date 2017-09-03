@@ -7,9 +7,9 @@ android {
         minSdkVersion 18
         targetSdkVersion 26
 
-        jackOptions {
-            enabled true
-        }
+//        jackOptions {
+//            enabled true
+//        }
     }
     buildTypes {
         release {
@@ -18,25 +18,23 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
 
     packagingOptions {
         exclude 'LICENSE.txt'
     }
     productFlavors {
-//        free {
-//            applicationId "krunal3kapadiya.com.memorycleaner"
-//            versionCode 1
-//            versionName "1.0"
-//        }
-//        paid {
-//            applicationId "krunal3kapadiya.com.memorycleaner"
-//            versionCode 1
-//            versionName "1.0"
-//        }
+        productFlavors {
+            free {
+                applicationId 'krunal3kapadiya.com.memorycleaner.free'
+            }
+            paid {
+                applicationId 'krunal3kapadiya.com.memorycleaner.paid'
+            }
+        }
     }
 }
 
@@ -47,7 +45,9 @@ dependencies {
     compile 'com.android.support:preference-v7:26.0.1'
 
 //    compile 'com.google.firebase:firebase-core:11.2.0'
-    compile 'com.google.firebase:firebase-ads:11.2.0'
+    freeCompile 'com.google.firebase:firebase-ads:11.2.0'
+    compile 'com.facebook.stetho:stetho:1.5.0'
+
     /**
      * retrofit and other libraries
      */
@@ -66,8 +66,5 @@ dependencies {
 //    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
 //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
 //    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-
-    //stetho
-//    compile 'com.facebook.stetho:stetho:1.5.0'
 }
 apply plugin: 'com.google.gms.google-services'

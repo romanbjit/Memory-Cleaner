@@ -3,6 +3,7 @@ package krunal3kapadiya.com.memorycleaner;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity
         Resources res = getResources();
         final PieChart pie = (PieChart) this.findViewById(R.id.Pie);
 
-
+// TODO 1) Display dialog for app intro
         askForPermission();
         getHikeFolderSize();
 
@@ -317,12 +318,20 @@ public class MainActivity extends AppCompatActivity
 
                 final ProgressDialog dialog = ProgressDialog.show(this, "", "Unzipping", true);
 
-                Thread thread = new Thread(() -> {
-                    try {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
 //                        setPath(unzip(currentDir));
-                        runOnUiThread(dialog::dismiss);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog.dismiss();
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
 
@@ -346,34 +355,38 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDeleteClick(int position) {
+    public void onDeleteClick(final int position) {
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setPositiveButton("YES", (dialogInterface, i) -> {
-
-
-                    if (mFiles[position].isDirectory()) {
-                        String[] children = mFiles[position].list();
-                        for (String aChildren : children) {
-                            boolean delete = new File(mFiles[position], aChildren).delete();
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (mFiles[position].isDirectory()) {
+                            String[] children = mFiles[position].list();
+                            for (String aChildren : children) {
+                                boolean delete = new File(mFiles[position], aChildren).delete();
+                            }
+                        } else {
+                            boolean delete = mFiles[position].delete();
                         }
-                    } else {
-                        boolean delete = mFiles[position].delete();
-                    }
 //                    mFiles[position].remove(position);
-                    currentDir = mFiles[position];
+                        currentDir = mFiles[position];
 
 
-                    if (currentDir.isDirectory()) {
-                        // TODO check length
-                        if (currentDir.canRead()) {
-                            adapter.setData(mFiles = currentDir.listFiles());
-                            adapter.notifyDataSetChanged();
+                        if (currentDir.isDirectory()) {
+                            // TODO check length
+                            if (currentDir.canRead()) {
+                                adapter.setData(mFiles = currentDir.listFiles());
+                                adapter.notifyDataSetChanged();
+                            }
                         }
-                    }
 //                                notifyItemChanged(getAdapterPosition());
+                    }
                 })
-                .setNegativeButton("NO", (dialogInterface, i) -> {
+                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
+                    }
                 })
                 .setMessage("Are you sure want to delete this file?")
                 .create();
