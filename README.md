@@ -1,5 +1,7 @@
 # Memory-Cleaner [![Build Status](https://travis-ci.org/krunal3kapadiya/Memory-Cleaner.svg?branch=master)](https://travis-ci.org/krunal3kapadiya/Memory-Cleaner)
 
+Simple app which will help to manage memory in low storage Android app devices
+
 ## How to contribute?
 - Check out contribution :point_right: [Guidelines](./CONTRIBUTING.md)  
 
