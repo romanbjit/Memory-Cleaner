@@ -1,6 +1,6 @@
 # Memory-Cleaner [![Build Status](https://travis-ci.org/krunal3kapadiya/Memory-Cleaner.svg?branch=master)](https://travis-ci.org/krunal3kapadiya/Memory-Cleaner)
 
-Simple app which will help to manage memory in low storage Android app devices
+It will help to clean the cached memories of apps like, WhatsApp, Hike, Snapchat. Though it is helping to run fast their app, but in some devices that are running out of storage, this app will help in betterment of storage. 
 
 ## How to contribute?
 - Check out contribution :point_right: [Guidelines](./CONTRIBUTING.md)  
